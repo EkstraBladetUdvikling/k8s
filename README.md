@@ -46,10 +46,27 @@ You should check in [kubernetes versions](https://docs.aws.amazon.com/eks/latest
 
 # how to use this EB flavor ci/cd like teamcity
 ```
-#pull image from someplace
+#1 pull image from someplace
 
-#prep .kube
 
-#.kube upandrunning useit
+#2 prep .kube
+docker run -it \
+  -v $(pwd)/root/.kube:/root/.kube \
+  -e AWS_ACCESS_KEY_ID="some-AWS_ACCESS_KEY_ID" \
+  -e AWS_SECRET_ACCESS_KEY="some-AWS_SECRET_ACCESS_KEY" \
+  -e AWS_DEFAULT_REGION="eu-west-1" \
+  alpine/k8s:1.20.4 aws eks --region eu-west-1 update-kubeconfig --name eb
+
+
+#3 .kube upandrunning useit
+docker run -it \
+  -v $(pwd)/root/.kube:/root/.kube \
+  -e AWS_ACCESS_KEY_ID="some-AWS_ACCESS_KEY_ID" \
+  -e AWS_SECRET_ACCESS_KEY="some-AWS_SECRET_ACCESS_KEY" \
+  -e AWS_DEFAULT_REGION="eu-west-1" \
+  alpine/k8s:1.20.4 kubectl get nodes
+
+#4 cleanup .kube
+rm -rf $(pwd)/root/.kube
 
 ```
